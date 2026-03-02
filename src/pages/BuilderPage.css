@@ -4,6 +4,10 @@
   gap: 18px;
 }
 
+.builder-page__template-row {
+  margin-bottom: 12px;
+}
+
 .builder-page__left,
 .builder-page__right {
   background: #ffffff;
@@ -74,6 +78,20 @@
   gap: 8px;
 }
 
+.builder-page__guidance {
+  border-top: 1px solid #ebebeb;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.builder-page__guidance-line {
+  margin: 0;
+  color: #555555;
+  font-size: 12px;
+}
+
 .builder-page__score-card {
   border: 1px solid #e7e7e7;
   background: #fbfbfb;
@@ -119,6 +137,25 @@
   flex-direction: column;
   gap: 6px;
   font-size: 13px;
+}
+
+.builder-page__improvements {
+  border-top: 1px solid #e7e7e7;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.builder-page__improvements-title {
+  margin: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.builder-page__improvements-empty {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #555555;
 }
 
 @media (max-width: 1080px) {

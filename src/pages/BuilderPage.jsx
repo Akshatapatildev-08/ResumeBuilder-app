@@ -1,5 +1,6 @@
 import ContextHeader from '../components/ContextHeader.jsx';
 import ResumePreviewShell from '../components/ResumePreviewShell.jsx';
+import TemplateTabs from '../components/TemplateTabs.jsx';
 import { computeAtsScore } from '../lib/atsScore.js';
 import { createSampleResume } from '../lib/resumeModel.js';
 import './BuilderPage.css';
@@ -13,8 +14,91 @@ function Section({ title, children }) {
   );
 }
 
-export default function BuilderPage({ resume, setResume }) {
+const ACTION_VERBS = [
+  'Built',
+  'Developed',
+  'Designed',
+  'Implemented',
+  'Led',
+  'Improved',
+  'Created',
+  'Optimized',
+  'Automated',
+];
+
+function parseBullets(text) {
+  return String(text || '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function startsWithActionVerb(line) {
+  const cleaned = line.replace(/^[-*•]\s*/, '');
+  return ACTION_VERBS.some((verb) => new RegExp(`^${verb}\\b`, 'i').test(cleaned));
+}
+
+function hasNumber(line) {
+  return /\d+(?:[.,]\d+)?\s*(?:%|x|X|k|K)?/.test(line);
+}
+
+function bulletGuidance(details) {
+  return parseBullets(details).map((line, index) => {
+    const messages = [];
+    if (!startsWithActionVerb(line)) messages.push('Start with a strong action verb.');
+    if (!hasNumber(line)) messages.push('Add measurable impact (numbers).');
+    return { id: `${index}-${line}`, line, messages };
+  });
+}
+
+function summaryWordCount(summary) {
+  return String(summary || '').trim().split(/\s+/).filter(Boolean).length;
+}
+
+function countSkills(skills) {
+  return String(skills || '').split(',').map((s) => s.trim()).filter(Boolean).length;
+}
+
+function hasNumericImpactAnywhere(resume) {
+  const lines = [
+    ...resume.experience.flatMap((entry) => parseBullets(entry.details)),
+    ...resume.projects.flatMap((entry) => parseBullets(entry.details)),
+  ];
+  return lines.some((line) => hasNumber(line));
+}
+
+function topImprovements(resume) {
+  const list = [];
+  const completeProjects = resume.projects.filter((entry) => entry.name.trim() && entry.details.trim()).length;
+  const completeExperience = resume.experience.filter((entry) => entry.company.trim() && entry.role.trim() && entry.details.trim()).length;
+
+  if (completeProjects < 2) list.push('Add at least 2 projects.');
+  if (!hasNumericImpactAnywhere(resume)) list.push('Add measurable impact (numbers).');
+  if (summaryWordCount(resume.summary) < 40) list.push('Expand summary to at least 40 words.');
+  if (countSkills(resume.skills) < 8) list.push('Add more skills (target 8+).');
+  if (completeExperience < 1) list.push('Add experience such as internship or project work.');
+
+  return list.slice(0, 3);
+}
+
+function GuidanceList({ details }) {
+  const rows = bulletGuidance(details).filter((row) => row.messages.length > 0);
+  if (rows.length === 0) return null;
+
+  return (
+    <div className="builder-page__guidance">
+      {rows.map((row) => (
+        <p key={row.id} className="builder-page__guidance-line">
+          {row.messages.join(' ')}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+export default function BuilderPage({ resume, setResume, template, setTemplate }) {
   const { score, suggestions } = computeAtsScore(resume);
+  const improvements = topImprovements(resume);
 
   function updatePersonal(field, value) {
     setResume((prev) => ({
@@ -51,6 +135,9 @@ export default function BuilderPage({ resume, setResume }) {
         title="Resume Builder"
         subtitle="Auto-saved editing with deterministic ATS scoring v1."
       />
+      <div className="builder-page__template-row">
+        <TemplateTabs value={template} onChange={setTemplate} />
+      </div>
 
       <div className="builder-page__layout">
         <div className="builder-page__left">
@@ -99,6 +186,7 @@ export default function BuilderPage({ resume, setResume }) {
                 <input value={entry.company} onChange={(e) => updateList('experience', index, 'company', e.target.value)} placeholder="Company" />
                 <input value={entry.role} onChange={(e) => updateList('experience', index, 'role', e.target.value)} placeholder="Role" />
                 <textarea rows={3} value={entry.details} onChange={(e) => updateList('experience', index, 'details', e.target.value)} placeholder="Details" />
+                <GuidanceList details={entry.details} />
               </div>
             ))}
             <button
@@ -115,6 +203,7 @@ export default function BuilderPage({ resume, setResume }) {
               <div key={`projects-${index}`} className="builder-page__group">
                 <input value={entry.name} onChange={(e) => updateList('projects', index, 'name', e.target.value)} placeholder="Project name" />
                 <textarea rows={3} value={entry.details} onChange={(e) => updateList('projects', index, 'details', e.target.value)} placeholder="Details" />
+                <GuidanceList details={entry.details} />
               </div>
             ))}
             <button
@@ -157,10 +246,23 @@ export default function BuilderPage({ resume, setResume }) {
                 ))}
               </ul>
             )}
+
+            <div className="builder-page__improvements">
+              <p className="builder-page__improvements-title">Top 3 Improvements</p>
+              {improvements.length > 0 ? (
+                <ul className="builder-page__suggestions">
+                  {improvements.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="builder-page__improvements-empty">Current draft covers top baseline checks.</p>
+              )}
+            </div>
           </div>
 
           <h3>Live Preview</h3>
-          <ResumePreviewShell resume={resume} />
+          <ResumePreviewShell resume={resume} template={template} />
         </div>
       </div>
     </section>

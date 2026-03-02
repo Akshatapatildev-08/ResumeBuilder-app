@@ -8,7 +8,7 @@ function text(value) {
   return String(value || '').trim();
 }
 
-export default function ResumePreviewShell({ resume }) {
+export default function ResumePreviewShell({ resume, template = 'classic' }) {
   const { personal, summary, education, experience, projects, skills, links } = resume;
   const contactParts = [personal.email, personal.phone, personal.location].map(text).filter(Boolean);
   const showSummary = hasText(summary);
@@ -20,7 +20,7 @@ export default function ResumePreviewShell({ resume }) {
   const showAnySection = showSummary || educationItems.length > 0 || experienceItems.length > 0 || projectItems.length > 0 || showSkills || showLinks;
 
   return (
-    <article className="resume-shell">
+    <article className={`resume-shell resume-shell--${template}`}>
       <header className="resume-shell__header">
         <h2>{text(personal.name) || 'Resume Preview'}</h2>
         {contactParts.length > 0 && <p>{contactParts.join(' | ')}</p>}

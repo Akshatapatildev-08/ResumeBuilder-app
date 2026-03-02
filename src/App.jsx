@@ -7,6 +7,9 @@ import PreviewPage from './pages/PreviewPage.jsx';
 import ProofPage from './pages/ProofPage.jsx';
 import { createEmptyResume, normalizeResume, RESUME_STORAGE_KEY } from './lib/resumeModel.js';
 
+const TEMPLATE_STORAGE_KEY = 'resumeBuilderTemplate';
+const TEMPLATE_OPTIONS = ['classic', 'modern', 'minimal'];
+
 export default function App() {
   const [resume, setResume] = useState(() => {
     try {
@@ -22,12 +25,44 @@ export default function App() {
     localStorage.setItem(RESUME_STORAGE_KEY, JSON.stringify(resume));
   }, [resume]);
 
+  const [template, setTemplate] = useState(() => {
+    try {
+      const saved = String(localStorage.getItem(TEMPLATE_STORAGE_KEY) || '').toLowerCase();
+      return TEMPLATE_OPTIONS.includes(saved) ? saved : 'classic';
+    } catch {
+      return 'classic';
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(TEMPLATE_STORAGE_KEY, template);
+  }, [template]);
+
   return (
     <Routes>
       <Route element={<AppLayout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/builder" element={<BuilderPage resume={resume} setResume={setResume} />} />
-        <Route path="/preview" element={<PreviewPage resume={resume} />} />
+        <Route
+          path="/builder"
+          element={(
+            <BuilderPage
+              resume={resume}
+              setResume={setResume}
+              template={template}
+              setTemplate={setTemplate}
+            />
+          )}
+        />
+        <Route
+          path="/preview"
+          element={(
+            <PreviewPage
+              resume={resume}
+              template={template}
+              setTemplate={setTemplate}
+            />
+          )}
+        />
         <Route path="/proof" element={<ProofPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

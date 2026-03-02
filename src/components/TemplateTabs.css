@@ -1,0 +1,22 @@
+.template-tabs {
+  display: inline-flex;
+  gap: 6px;
+  border: 1px solid #d8d8d8;
+  background: #ffffff;
+  padding: 4px;
+}
+
+.template-tabs__tab {
+  border: 1px solid transparent;
+  background: #ffffff;
+  color: #222222;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.template-tabs__tab--active {
+  border-color: #111111;
+}

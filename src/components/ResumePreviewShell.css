@@ -7,6 +7,21 @@
   gap: 16px;
 }
 
+.resume-shell--classic {
+  border-color: #d5d5d5;
+  padding: 26px;
+}
+
+.resume-shell--modern {
+  border-color: #bbbbbb;
+  padding: 30px;
+}
+
+.resume-shell--minimal {
+  border-color: #e3e3e3;
+  padding: 22px;
+}
+
 .resume-shell__header h2 {
   margin: 0;
   font-family: ui-serif, Georgia, 'Times New Roman', serif;
@@ -25,12 +40,33 @@
   padding-top: 12px;
 }
 
+.resume-shell--modern .resume-shell__section {
+  border-top-color: #d6d6d6;
+}
+
+.resume-shell--minimal .resume-shell__section {
+  border-top: 0;
+  border-left: 2px solid #e4e4e4;
+  padding-top: 0;
+  padding-left: 10px;
+}
+
 .resume-shell__section h3 {
   margin: 0 0 8px;
   font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-weight: 600;
+}
+
+.resume-shell--modern .resume-shell__header h2 {
+  font-family: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
+  letter-spacing: 0.01em;
+}
+
+.resume-shell--minimal .resume-shell__header h2 {
+  font-size: 24px;
+  font-weight: 400;
 }
 
 .resume-shell__section p {
