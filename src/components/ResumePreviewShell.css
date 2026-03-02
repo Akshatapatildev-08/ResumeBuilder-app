@@ -1,0 +1,55 @@
+.resume-shell {
+  background: #ffffff;
+  border: 1px solid #d5d5d5;
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resume-shell__header h2 {
+  margin: 0;
+  font-family: ui-serif, Georgia, 'Times New Roman', serif;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.resume-shell__header p {
+  margin: 8px 0 0;
+  color: #2e2e2e;
+  font-size: 13px;
+}
+
+.resume-shell__section {
+  border-top: 1px solid #ececec;
+  padding-top: 12px;
+}
+
+.resume-shell__section h3 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.resume-shell__section p {
+  margin: 0;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.resume-shell__item {
+  margin-bottom: 10px;
+}
+
+.resume-shell__item strong {
+  display: block;
+  font-size: 14px;
+}
+
+.resume-shell__item span {
+  display: block;
+  font-size: 13px;
+  color: #444444;
+}

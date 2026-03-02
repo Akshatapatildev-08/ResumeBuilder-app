@@ -1,0 +1,75 @@
+.builder-page__layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.builder-page__left,
+.builder-page__right {
+  background: #ffffff;
+  border: 1px solid #d4d4d4;
+  padding: 16px;
+}
+
+.builder-page__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.builder-page__sample-btn,
+.builder-page__add-btn {
+  border: 1px solid #111111;
+  background: #ffffff;
+  color: #111111;
+  border-radius: 999px;
+  padding: 7px 12px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.builder-page__section {
+  border-top: 1px solid #ececec;
+  padding-top: 14px;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.builder-page__section h3,
+.builder-page__right h3 {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.builder-page input,
+.builder-page textarea {
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #ffffff;
+}
+
+.builder-page textarea {
+  resize: vertical;
+}
+
+.builder-page__group {
+  padding: 10px;
+  border: 1px solid #ededed;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (max-width: 1080px) {
+  .builder-page__layout {
+    grid-template-columns: 1fr;
+  }
+}

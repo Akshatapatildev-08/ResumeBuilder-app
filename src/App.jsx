@@ -1,21 +1,24 @@
+import { useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import BuildStepPage from './pages/BuildStepPage.jsx';
+import AppLayout from './components/AppLayout.jsx';
+import HomePage from './pages/HomePage.jsx';
+import BuilderPage from './pages/BuilderPage.jsx';
+import PreviewPage from './pages/PreviewPage.jsx';
 import ProofPage from './pages/ProofPage.jsx';
+import { createEmptyResume } from './lib/resumeModel.js';
 
 export default function App() {
+  const [resume, setResume] = useState(() => createEmptyResume());
+
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/rb/01-problem" replace />} />
-      <Route path="/rb/01-problem" element={<BuildStepPage stepIndex={1} />} />
-      <Route path="/rb/02-market" element={<BuildStepPage stepIndex={2} />} />
-      <Route path="/rb/03-architecture" element={<BuildStepPage stepIndex={3} />} />
-      <Route path="/rb/04-hld" element={<BuildStepPage stepIndex={4} />} />
-      <Route path="/rb/05-lld" element={<BuildStepPage stepIndex={5} />} />
-      <Route path="/rb/06-build" element={<BuildStepPage stepIndex={6} />} />
-      <Route path="/rb/07-test" element={<BuildStepPage stepIndex={7} />} />
-      <Route path="/rb/08-ship" element={<BuildStepPage stepIndex={8} />} />
-      <Route path="/rb/proof" element={<ProofPage />} />
-      <Route path="*" element={<Navigate to="/rb/01-problem" replace />} />
+      <Route element={<AppLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/builder" element={<BuilderPage resume={resume} setResume={setResume} />} />
+        <Route path="/preview" element={<PreviewPage resume={resume} />} />
+        <Route path="/proof" element={<ProofPage />} />
+      </Route>
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

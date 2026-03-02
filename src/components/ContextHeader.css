@@ -1,15 +1,18 @@
 .context-header {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 16px;
+  padding: 28px 0 20px;
 }
 
 .context-header__title {
   margin: 0;
-  font-size: 22px;
+  font-family: ui-serif, Georgia, 'Times New Roman', serif;
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
 }
 
 .context-header__subtitle {
-  margin: 6px 0 0;
-  color: var(--muted);
+  margin: 10px 0 0;
+  color: #444444;
+  font-size: 15px;
 }

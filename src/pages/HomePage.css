@@ -1,0 +1,30 @@
+.home-page__hero {
+  background: #ffffff;
+  border: 1px solid #d4d4d4;
+  padding: 40px 28px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+}
+
+.home-page__hero h2 {
+  margin: 0;
+  max-width: 720px;
+  font-family: ui-serif, Georgia, 'Times New Roman', serif;
+  font-size: clamp(34px, 6vw, 56px);
+  line-height: 1.04;
+  font-weight: 500;
+}
+
+.home-page__cta {
+  width: fit-content;
+  text-decoration: none;
+  color: #111111;
+  border: 1px solid #111111;
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+}

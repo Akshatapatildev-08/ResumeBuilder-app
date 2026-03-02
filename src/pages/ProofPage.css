@@ -1,37 +1,15 @@
-.proof-main__list {
-  list-style: none;
-  padding: 0;
+.proof-page__card {
+  background: #ffffff;
+  border: 1px solid #d4d4d4;
+  padding: 24px;
+}
+
+.proof-page__card h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.proof-page__card p {
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.proof-main__item {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.proof-side {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.proof-side h3 {
-  margin: 0 0 6px;
-}
-
-.proof-side__input {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px;
-  font-size: 14px;
+  color: #3e3e3e;
 }
