@@ -1,0 +1,15 @@
+.context-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 16px;
+}
+
+.context-header__title {
+  margin: 0;
+  font-size: 22px;
+}
+
+.context-header__subtitle {
+  margin: 6px 0 0;
+  color: var(--muted);
+}

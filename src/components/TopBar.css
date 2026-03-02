@@ -1,0 +1,46 @@
+.topbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.topbar__left {
+  font-weight: 700;
+}
+
+.topbar__center {
+  justify-self: center;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.topbar__badge {
+  justify-self: end;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 999px;
+  border: 1px solid;
+  padding: 4px 10px;
+}
+
+.topbar__badge--not-started {
+  color: #334155;
+  border-color: #94a3b8;
+  background: #f1f5f9;
+}
+
+.topbar__badge--in-progress {
+  color: var(--warning);
+  border-color: #fdba74;
+  background: #fff7ed;
+}
+
+.topbar__badge--shipped {
+  color: var(--success);
+  border-color: #6ee7b7;
+  background: #ecfdf5;
+}

@@ -1,0 +1,29 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.workspace {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  flex: 1;
+  min-height: 0;
+}
+
+.workspace__main {
+  flex: 7;
+  min-width: 0;
+}
+
+.workspace__side {
+  flex: 3;
+  min-width: 0;
+}
+
+@media (max-width: 960px) {
+  .workspace {
+    flex-direction: column;
+  }
+}
