@@ -1,3 +1,5 @@
+export const RESUME_STORAGE_KEY = 'resumeBuilderData';
+
 export function createEmptyResume() {
   return {
     personal: {
@@ -20,6 +22,52 @@ export function createEmptyResume() {
     links: {
       github: '',
       linkedin: '',
+    },
+  };
+}
+
+function normalizeText(value) {
+  return String(value || '');
+}
+
+function normalizeList(raw, template) {
+  if (!Array.isArray(raw) || raw.length === 0) return [template];
+  return raw.map((item) => ({
+    ...template,
+    ...(item && typeof item === 'object' ? item : {}),
+  }));
+}
+
+export function normalizeResume(raw) {
+  const base = createEmptyResume();
+  if (!raw || typeof raw !== 'object') return base;
+
+  return {
+    personal: {
+      name: normalizeText(raw.personal?.name),
+      email: normalizeText(raw.personal?.email),
+      phone: normalizeText(raw.personal?.phone),
+      location: normalizeText(raw.personal?.location),
+    },
+    summary: normalizeText(raw.summary),
+    education: normalizeList(raw.education, { school: '', degree: '', details: '' }).map((entry) => ({
+      school: normalizeText(entry.school),
+      degree: normalizeText(entry.degree),
+      details: normalizeText(entry.details),
+    })),
+    experience: normalizeList(raw.experience, { company: '', role: '', details: '' }).map((entry) => ({
+      company: normalizeText(entry.company),
+      role: normalizeText(entry.role),
+      details: normalizeText(entry.details),
+    })),
+    projects: normalizeList(raw.projects, { name: '', details: '' }).map((entry) => ({
+      name: normalizeText(entry.name),
+      details: normalizeText(entry.details),
+    })),
+    skills: normalizeText(raw.skills),
+    links: {
+      github: normalizeText(raw.links?.github),
+      linkedin: normalizeText(raw.links?.linkedin),
     },
   };
 }

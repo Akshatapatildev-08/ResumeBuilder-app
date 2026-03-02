@@ -53,3 +53,10 @@
   font-size: 13px;
   color: #444444;
 }
+
+.resume-shell__empty {
+  border-top: 1px solid #ececec;
+  padding-top: 12px;
+  color: #555555;
+  font-size: 14px;
+}

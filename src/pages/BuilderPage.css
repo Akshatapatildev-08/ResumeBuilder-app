@@ -11,6 +11,12 @@
   padding: 16px;
 }
 
+.builder-page__right {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
 .builder-page__toolbar {
   display: flex;
   justify-content: flex-end;
@@ -66,6 +72,53 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.builder-page__score-card {
+  border: 1px solid #e7e7e7;
+  background: #fbfbfb;
+  padding: 12px;
+}
+
+.builder-page__score-label {
+  margin: 0 0 10px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.builder-page__score-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.builder-page__score-row strong {
+  font-size: 15px;
+  min-width: 62px;
+}
+
+.builder-page__meter {
+  height: 8px;
+  background: #ececec;
+  border-radius: 999px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.builder-page__meter-fill {
+  height: 100%;
+  background: #111111;
+  border-radius: 999px;
+}
+
+.builder-page__suggestions {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
 }
 
 @media (max-width: 1080px) {

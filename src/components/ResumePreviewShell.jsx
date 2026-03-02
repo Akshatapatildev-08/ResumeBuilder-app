@@ -1,67 +1,96 @@
 import './ResumePreviewShell.css';
 
-function line(value, fallback) {
-  const content = String(value || '').trim();
-  return content || fallback;
+function hasText(value) {
+  return String(value || '').trim().length > 0;
+}
+
+function text(value) {
+  return String(value || '').trim();
 }
 
 export default function ResumePreviewShell({ resume }) {
   const { personal, summary, education, experience, projects, skills, links } = resume;
+  const contactParts = [personal.email, personal.phone, personal.location].map(text).filter(Boolean);
+  const showSummary = hasText(summary);
+  const educationItems = education.filter((entry) => hasText(entry.school) || hasText(entry.degree) || hasText(entry.details));
+  const experienceItems = experience.filter((entry) => hasText(entry.company) || hasText(entry.role) || hasText(entry.details));
+  const projectItems = projects.filter((entry) => hasText(entry.name) || hasText(entry.details));
+  const showSkills = hasText(skills);
+  const showLinks = hasText(links.github) || hasText(links.linkedin);
+  const showAnySection = showSummary || educationItems.length > 0 || experienceItems.length > 0 || projectItems.length > 0 || showSkills || showLinks;
 
   return (
     <article className="resume-shell">
       <header className="resume-shell__header">
-        <h2>{line(personal.name, 'Your Name')}</h2>
-        <p>{[line(personal.email, 'email@domain.com'), line(personal.phone, '+91 xxxxx xxxxx'), line(personal.location, 'City, Country')].join(' | ')}</p>
+        <h2>{text(personal.name) || 'Resume Preview'}</h2>
+        {contactParts.length > 0 && <p>{contactParts.join(' | ')}</p>}
       </header>
 
-      <section className="resume-shell__section">
-        <h3>Summary</h3>
-        <p>{line(summary, 'Write a short summary that highlights your strengths and goals.')}</p>
-      </section>
+      {showSummary && (
+        <section className="resume-shell__section">
+          <h3>Summary</h3>
+          <p>{text(summary)}</p>
+        </section>
+      )}
 
-      <section className="resume-shell__section">
-        <h3>Education</h3>
-        {education.map((entry, index) => (
-          <div key={`edu-${index}`} className="resume-shell__item">
-            <strong>{line(entry.school, 'Institution')}</strong>
-            <span>{line(entry.degree, 'Degree')}</span>
-            <p>{line(entry.details, 'Education details')}</p>
-          </div>
-        ))}
-      </section>
+      {educationItems.length > 0 && (
+        <section className="resume-shell__section">
+          <h3>Education</h3>
+          {educationItems.map((entry, index) => (
+            <div key={`edu-${index}`} className="resume-shell__item">
+              {hasText(entry.school) && <strong>{text(entry.school)}</strong>}
+              {hasText(entry.degree) && <span>{text(entry.degree)}</span>}
+              {hasText(entry.details) && <p>{text(entry.details)}</p>}
+            </div>
+          ))}
+        </section>
+      )}
 
-      <section className="resume-shell__section">
-        <h3>Experience</h3>
-        {experience.map((entry, index) => (
-          <div key={`exp-${index}`} className="resume-shell__item">
-            <strong>{line(entry.company, 'Company')}</strong>
-            <span>{line(entry.role, 'Role')}</span>
-            <p>{line(entry.details, 'Experience details')}</p>
-          </div>
-        ))}
-      </section>
+      {experienceItems.length > 0 && (
+        <section className="resume-shell__section">
+          <h3>Experience</h3>
+          {experienceItems.map((entry, index) => (
+            <div key={`exp-${index}`} className="resume-shell__item">
+              {hasText(entry.company) && <strong>{text(entry.company)}</strong>}
+              {hasText(entry.role) && <span>{text(entry.role)}</span>}
+              {hasText(entry.details) && <p>{text(entry.details)}</p>}
+            </div>
+          ))}
+        </section>
+      )}
 
-      <section className="resume-shell__section">
-        <h3>Projects</h3>
-        {projects.map((entry, index) => (
-          <div key={`proj-${index}`} className="resume-shell__item">
-            <strong>{line(entry.name, 'Project')}</strong>
-            <p>{line(entry.details, 'Project details')}</p>
-          </div>
-        ))}
-      </section>
+      {projectItems.length > 0 && (
+        <section className="resume-shell__section">
+          <h3>Projects</h3>
+          {projectItems.map((entry, index) => (
+            <div key={`proj-${index}`} className="resume-shell__item">
+              {hasText(entry.name) && <strong>{text(entry.name)}</strong>}
+              {hasText(entry.details) && <p>{text(entry.details)}</p>}
+            </div>
+          ))}
+        </section>
+      )}
 
-      <section className="resume-shell__section">
-        <h3>Skills</h3>
-        <p>{line(skills, 'Skills list (comma-separated)')}</p>
-      </section>
+      {showSkills && (
+        <section className="resume-shell__section">
+          <h3>Skills</h3>
+          <p>{text(skills)}</p>
+        </section>
+      )}
 
-      <section className="resume-shell__section">
-        <h3>Links</h3>
-        <p>{`GitHub: ${line(links.github, 'github.com/yourprofile')}`}</p>
-        <p>{`LinkedIn: ${line(links.linkedin, 'linkedin.com/in/yourprofile')}`}</p>
-      </section>
+      {showLinks && (
+        <section className="resume-shell__section">
+          <h3>Links</h3>
+          {hasText(links.github) && <p>{`GitHub: ${text(links.github)}`}</p>}
+          {hasText(links.linkedin) && <p>{`LinkedIn: ${text(links.linkedin)}`}</p>}
+        </section>
+      )}
+
+      {!showAnySection && (
+        <section className="resume-shell__empty">
+          Start filling the form to generate your resume preview.
+        </section>
+      )}
     </article>
   );
 }

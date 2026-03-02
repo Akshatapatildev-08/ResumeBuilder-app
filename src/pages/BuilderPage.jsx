@@ -1,5 +1,6 @@
 import ContextHeader from '../components/ContextHeader.jsx';
 import ResumePreviewShell from '../components/ResumePreviewShell.jsx';
+import { computeAtsScore } from '../lib/atsScore.js';
 import { createSampleResume } from '../lib/resumeModel.js';
 import './BuilderPage.css';
 
@@ -13,6 +14,8 @@ function Section({ title, children }) {
 }
 
 export default function BuilderPage({ resume, setResume }) {
+  const { score, suggestions } = computeAtsScore(resume);
+
   function updatePersonal(field, value) {
     setResume((prev) => ({
       ...prev,
@@ -46,7 +49,7 @@ export default function BuilderPage({ resume, setResume }) {
     <section className="builder-page">
       <ContextHeader
         title="Resume Builder"
-        subtitle="Structure and live preview shell only. No scoring, export, or validation."
+        subtitle="Auto-saved editing with deterministic ATS scoring v1."
       />
 
       <div className="builder-page__layout">
@@ -138,6 +141,24 @@ export default function BuilderPage({ resume, setResume }) {
         </div>
 
         <div className="builder-page__right">
+          <div className="builder-page__score-card">
+            <p className="builder-page__score-label">ATS Readiness Score</p>
+            <div className="builder-page__score-row">
+              <div className="builder-page__meter" aria-hidden="true">
+                <div className="builder-page__meter-fill" style={{ width: `${score}%` }} />
+              </div>
+              <strong>{score}/100</strong>
+            </div>
+
+            {suggestions.length > 0 && (
+              <ul className="builder-page__suggestions">
+                {suggestions.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           <h3>Live Preview</h3>
           <ResumePreviewShell resume={resume} />
         </div>
