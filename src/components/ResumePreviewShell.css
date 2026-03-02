@@ -5,6 +5,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  overflow: hidden;
 }
 
 .resume-shell--classic {
@@ -38,6 +39,8 @@
 .resume-shell__section {
   border-top: 1px solid #ececec;
   padding-top: 12px;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .resume-shell--modern .resume-shell__section {
@@ -73,10 +76,14 @@
   margin: 0;
   line-height: 1.5;
   font-size: 14px;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .resume-shell__item {
   margin-bottom: 10px;
+  break-inside: avoid;
+  page-break-inside: avoid;
 }
 
 .resume-shell__item strong {
@@ -95,4 +102,32 @@
   padding-top: 12px;
   color: #555555;
   font-size: 14px;
+}
+
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  .resume-shell {
+    border: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0 !important;
+    gap: 12px;
+  }
+
+  .resume-shell__section,
+  .resume-shell__item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .resume-shell__header h2,
+  .resume-shell__section h3,
+  .resume-shell__section p,
+  .resume-shell__item strong,
+  .resume-shell__item span {
+    color: #000000 !important;
+  }
 }

@@ -1,3 +1,28 @@
+.preview-page__actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.preview-page__action-btn {
+  border: 1px solid #111111;
+  background: #ffffff;
+  color: #111111;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.preview-page__warning {
+  margin: 0 0 12px;
+  border: 1px solid #d3d3d3;
+  background: #f8f8f8;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #333333;
+}
+
 .preview-page__template-row {
   margin-bottom: 12px;
 }
@@ -6,4 +31,18 @@
   background: #ffffff;
   border: 1px solid #d4d4d4;
   padding: 24px;
+}
+
+@media print {
+  .preview-page__actions,
+  .preview-page__warning,
+  .preview-page__template-row {
+    display: none !important;
+  }
+
+  .preview-page__canvas {
+    border: 0;
+    padding: 0;
+    background: #ffffff;
+  }
 }

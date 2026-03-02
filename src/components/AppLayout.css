@@ -57,3 +57,22 @@
     padding: 0 16px 16px;
   }
 }
+
+@media print {
+  .app-layout {
+    background: #ffffff;
+    color: #000000;
+  }
+
+  .app-layout__top-nav {
+    display: none !important;
+  }
+
+  .app-layout__content {
+    padding: 0 !important;
+  }
+
+  .context-header {
+    display: none !important;
+  }
+}
