@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import ContextHeader from '../components/ContextHeader.jsx';
 import ResumePreviewShell from '../components/ResumePreviewShell.jsx';
 import TemplatePicker from '../components/TemplatePicker.jsx';
+import { computeAtsScore } from '../lib/atsScore.js';
 import './PreviewPage.css';
 
 function hasText(value) {
@@ -107,6 +108,17 @@ export default function PreviewPage({
   const [copyState, setCopyState] = useState('idle');
   const [toast, setToast] = useState('');
   const plainText = useMemo(() => buildPlainTextResume(resume), [resume]);
+  const { score, suggestions } = computeAtsScore(resume);
+
+  let scoreBand = 'needs-work';
+  let scoreLabel = 'Needs Work';
+  if (score > 40 && score <= 70) {
+    scoreBand = 'getting-there';
+    scoreLabel = 'Getting There';
+  } else if (score > 70) {
+    scoreBand = 'strong';
+    scoreLabel = 'Strong Resume';
+  }
 
   function applyExportWarningIfNeeded() {
     if (isResumePotentiallyIncomplete(resume)) {
@@ -150,6 +162,26 @@ export default function PreviewPage({
       </div>
       {toast && <p className="preview-page__toast">{toast}</p>}
       {warning && <p className="preview-page__warning">{warning}</p>}
+      <section className="preview-page__score-card">
+        <div
+          className={`preview-page__score-circle preview-page__score-circle--${scoreBand}`}
+          style={{ '--score-value': `${score}` }}
+          aria-label={`ATS score ${score}`}
+        >
+          <span>{score}</span>
+        </div>
+        <div className="preview-page__score-copy">
+          <p className="preview-page__score-title">ATS Resume Score</p>
+          <p className={`preview-page__score-status preview-page__score-status--${scoreBand}`}>{scoreLabel}</p>
+          {suggestions.length > 0 && (
+            <ul className="preview-page__score-suggestions">
+              {suggestions.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
       <TemplatePicker
         template={template}
         onTemplateChange={setTemplate}

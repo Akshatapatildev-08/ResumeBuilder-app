@@ -2,16 +2,6 @@ function hasText(value) {
   return String(value || '').trim().length > 0;
 }
 
-function countWords(text) {
-  const words = String(text || '').trim().split(/\s+/).filter(Boolean);
-  return words.length;
-}
-
-function countValidEntries(list, requiredFields) {
-  if (!Array.isArray(list)) return 0;
-  return list.filter((entry) => requiredFields.every((field) => hasText(entry?.[field]))).length;
-}
-
 function parseSkills(skills) {
   if (skills && typeof skills === 'object' && !Array.isArray(skills)) {
     return [
@@ -29,51 +19,106 @@ function parseSkills(skills) {
     .filter(Boolean);
 }
 
-function hasNumericImpact(resume) {
-  const numberPattern = /\d+(?:[.,]\d+)?\s*(?:%|x|X|k|K)?/;
-  const expHas = Array.isArray(resume.experience)
-    && resume.experience.some((entry) => numberPattern.test(String(entry?.details || '')));
-  const projHas = Array.isArray(resume.projects)
-    && resume.projects.some((entry) => numberPattern.test(String(entry?.description || entry?.details || '')));
-  return expHas || projHas;
+function hasActionVerbInSummary(summary) {
+  const verbs = ['built', 'led', 'designed', 'improved', 'developed', 'implemented', 'optimized', 'created', 'automated'];
+  const content = String(summary || '').toLowerCase();
+  return verbs.some((verb) => new RegExp(`\\b${verb}\\b`, 'i').test(content));
+}
+
+function hasExperienceWithBullets(experience) {
+  if (!Array.isArray(experience)) return false;
+  return experience.some((entry) => {
+    const details = String(entry?.details || '');
+    const lines = details.split('\n').map((line) => line.trim()).filter(Boolean);
+    return lines.length > 0;
+  });
+}
+
+function hasEducationEntry(education) {
+  if (!Array.isArray(education)) return false;
+  return education.some((entry) => hasText(entry?.school) || hasText(entry?.degree) || hasText(entry?.details));
+}
+
+function hasProjectEntry(projects) {
+  if (!Array.isArray(projects)) return false;
+  return projects.some((entry) => hasText(entry?.title) || hasText(entry?.description));
 }
 
 export function computeAtsScore(resume) {
-  const summaryWords = countWords(resume.summary);
-  const summaryOk = summaryWords >= 40 && summaryWords <= 120;
-  const projectsCount = countValidEntries(resume.projects, ['title', 'description']);
-  const projectsOk = projectsCount >= 2;
-  const experienceCount = countValidEntries(resume.experience, ['company', 'role', 'details']);
-  const experienceOk = experienceCount >= 1;
-  const skillsCount = parseSkills(resume.skills).length;
-  const skillsOk = skillsCount >= 8;
-  const linksOk = hasText(resume.links?.github) || hasText(resume.links?.linkedin);
-  const impactOk = hasNumericImpact(resume);
-  const educationComplete = countValidEntries(resume.education, ['school', 'degree', 'details']) >= 1;
+  const checks = [
+    {
+      key: 'name',
+      points: 10,
+      pass: hasText(resume.personal?.name),
+      suggestion: 'Add your full name (+10 points).',
+    },
+    {
+      key: 'email',
+      points: 10,
+      pass: hasText(resume.personal?.email),
+      suggestion: 'Add your email (+10 points).',
+    },
+    {
+      key: 'summaryLength',
+      points: 10,
+      pass: String(resume.summary || '').trim().length > 50,
+      suggestion: 'Add a professional summary (+10 points).',
+    },
+    {
+      key: 'experienceBullets',
+      points: 15,
+      pass: hasExperienceWithBullets(resume.experience),
+      suggestion: 'Add at least one experience entry with bullets (+15 points).',
+    },
+    {
+      key: 'education',
+      points: 10,
+      pass: hasEducationEntry(resume.education),
+      suggestion: 'Add at least one education entry (+10 points).',
+    },
+    {
+      key: 'skills',
+      points: 10,
+      pass: parseSkills(resume.skills).length >= 5,
+      suggestion: 'Add at least 5 skills (+10 points).',
+    },
+    {
+      key: 'projects',
+      points: 10,
+      pass: hasProjectEntry(resume.projects),
+      suggestion: 'Add at least one project (+10 points).',
+    },
+    {
+      key: 'phone',
+      points: 5,
+      pass: hasText(resume.personal?.phone),
+      suggestion: 'Add a phone number (+5 points).',
+    },
+    {
+      key: 'linkedin',
+      points: 5,
+      pass: hasText(resume.links?.linkedin),
+      suggestion: 'Add a LinkedIn link (+5 points).',
+    },
+    {
+      key: 'github',
+      points: 5,
+      pass: hasText(resume.links?.github),
+      suggestion: 'Add a GitHub link (+5 points).',
+    },
+    {
+      key: 'summaryVerbs',
+      points: 10,
+      pass: hasActionVerbInSummary(resume.summary),
+      suggestion: 'Use action verbs in summary (built, led, designed, improved) (+10 points).',
+    },
+  ];
 
-  const points = [
-    summaryOk ? 15 : 0,
-    projectsOk ? 10 : 0,
-    experienceOk ? 10 : 0,
-    skillsOk ? 10 : 0,
-    linksOk ? 10 : 0,
-    impactOk ? 15 : 0,
-    educationComplete ? 10 : 0,
-  ].reduce((acc, value) => acc + value, 0);
-
-  const score = Math.min(100, points);
-  const suggestions = [];
-
-  if (!projectsOk) suggestions.push('Add at least 2 projects.');
-  if (!impactOk) suggestions.push('Add measurable impact (numbers) in bullets.');
-  if (!skillsOk) suggestions.push('Add more skills (target 8+).');
-  if (!summaryOk) suggestions.push('Write a stronger summary (40-120 words).');
-  if (!experienceOk) suggestions.push('Add at least 1 complete experience entry.');
-  if (!linksOk) suggestions.push('Add GitHub or LinkedIn link.');
-  if (!educationComplete) suggestions.push('Complete education fields (school, degree, details).');
+  const score = checks.reduce((total, item) => total + (item.pass ? item.points : 0), 0);
+  const suggestions = checks.filter((item) => !item.pass).map((item) => item.suggestion);
 
   return {
-    score,
-    suggestions: suggestions.slice(0, 3),
+    score: Math.min(100, score),
+    suggestions,
   };
 }
