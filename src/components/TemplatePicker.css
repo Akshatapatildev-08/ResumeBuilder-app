@@ -1,0 +1,126 @@
+.template-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.template-picker__title {
+  margin: 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #333333;
+}
+
+.template-picker__templates {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.template-picker__card {
+  width: 120px;
+  border: 1px solid #d4d4d4;
+  background: #ffffff;
+  padding: 8px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.template-picker__card--active {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb inset;
+}
+
+.template-picker__check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.template-picker__label {
+  font-size: 12px;
+  text-align: left;
+}
+
+.template-picker__sketch {
+  border: 1px solid #dfdfdf;
+  background: #fcfcfc;
+  height: 72px;
+  display: flex;
+  padding: 6px;
+  gap: 4px;
+}
+
+.template-picker__sketch span {
+  display: block;
+  background: #dfdfdf;
+}
+
+.template-picker__sketch--classic {
+  flex-direction: column;
+}
+
+.template-picker__sketch--classic span:nth-child(1) {
+  height: 10px;
+  width: 70%;
+}
+
+.template-picker__sketch--classic span:nth-child(2),
+.template-picker__sketch--classic span:nth-child(3) {
+  height: 1px;
+  width: 100%;
+}
+
+.template-picker__sketch--modern {
+  display: grid;
+  grid-template-columns: 30% 70%;
+}
+
+.template-picker__modern-left {
+  background: #d7d7d7;
+}
+
+.template-picker__modern-right {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+}
+
+.template-picker__modern-right span {
+  height: 6px;
+  width: 100%;
+}
+
+.template-picker__sketch--minimal {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.template-picker__sketch--minimal span {
+  height: 6px;
+}
+
+.template-picker__colors {
+  display: flex;
+  gap: 10px;
+}
+
+.template-picker__color {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid #999999;
+  cursor: pointer;
+}
+
+.template-picker__color--active {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px #2563eb;
+}

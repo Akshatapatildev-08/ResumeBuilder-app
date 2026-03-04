@@ -8,7 +8,15 @@ import ProofPage from './pages/ProofPage.jsx';
 import { createEmptyResume, normalizeResume, RESUME_STORAGE_KEY } from './lib/resumeModel.js';
 
 const TEMPLATE_STORAGE_KEY = 'resumeBuilderTemplate';
+const ACCENT_STORAGE_KEY = 'resumeBuilderAccent';
 const TEMPLATE_OPTIONS = ['classic', 'modern', 'minimal'];
+const ACCENT_OPTIONS = [
+  'hsl(168, 60%, 40%)',
+  'hsl(220, 60%, 35%)',
+  'hsl(345, 60%, 38%)',
+  'hsl(150, 50%, 30%)',
+  'hsl(0, 0%, 25%)',
+];
 
 export default function App() {
   const [resume, setResume] = useState(() => {
@@ -38,6 +46,19 @@ export default function App() {
     localStorage.setItem(TEMPLATE_STORAGE_KEY, template);
   }, [template]);
 
+  const [accentColor, setAccentColor] = useState(() => {
+    try {
+      const saved = String(localStorage.getItem(ACCENT_STORAGE_KEY) || '');
+      return ACCENT_OPTIONS.includes(saved) ? saved : 'hsl(168, 60%, 40%)';
+    } catch {
+      return 'hsl(168, 60%, 40%)';
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(ACCENT_STORAGE_KEY, accentColor);
+  }, [accentColor]);
+
   return (
     <Routes>
       <Route element={<AppLayout />}>
@@ -50,6 +71,8 @@ export default function App() {
               setResume={setResume}
               template={template}
               setTemplate={setTemplate}
+              accentColor={accentColor}
+              setAccentColor={setAccentColor}
             />
           )}
         />
@@ -60,6 +83,8 @@ export default function App() {
               resume={resume}
               template={template}
               setTemplate={setTemplate}
+              accentColor={accentColor}
+              setAccentColor={setAccentColor}
             />
           )}
         />

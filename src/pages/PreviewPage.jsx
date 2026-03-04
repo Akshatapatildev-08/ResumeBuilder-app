@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import ContextHeader from '../components/ContextHeader.jsx';
 import ResumePreviewShell from '../components/ResumePreviewShell.jsx';
-import TemplateTabs from '../components/TemplateTabs.jsx';
+import TemplatePicker from '../components/TemplatePicker.jsx';
 import './PreviewPage.css';
 
 function hasText(value) {
@@ -96,9 +96,16 @@ function isResumePotentiallyIncomplete(resume) {
   return !hasName || (!hasProject && !hasExperience);
 }
 
-export default function PreviewPage({ resume, template, setTemplate }) {
+export default function PreviewPage({
+  resume,
+  template,
+  setTemplate,
+  accentColor,
+  setAccentColor,
+}) {
   const [warning, setWarning] = useState('');
   const [copyState, setCopyState] = useState('idle');
+  const [toast, setToast] = useState('');
   const plainText = useMemo(() => buildPlainTextResume(resume), [resume]);
 
   function applyExportWarningIfNeeded() {
@@ -111,6 +118,8 @@ export default function PreviewPage({ resume, template, setTemplate }) {
 
   function handlePrint() {
     applyExportWarningIfNeeded();
+    setToast('PDF export ready! Check your downloads.');
+    setTimeout(() => setToast(''), 2200);
     window.print();
   }
 
@@ -133,18 +142,22 @@ export default function PreviewPage({ resume, template, setTemplate }) {
       />
       <div className="preview-page__actions">
         <button type="button" className="preview-page__action-btn" onClick={handlePrint}>
-          Print / Save as PDF
+          Download PDF
         </button>
         <button type="button" className="preview-page__action-btn" onClick={handleCopyText}>
           {copyState === 'copied' ? 'Copied' : 'Copy Resume as Text'}
         </button>
       </div>
+      {toast && <p className="preview-page__toast">{toast}</p>}
       {warning && <p className="preview-page__warning">{warning}</p>}
-      <div className="preview-page__template-row">
-        <TemplateTabs value={template} onChange={setTemplate} />
-      </div>
+      <TemplatePicker
+        template={template}
+        onTemplateChange={setTemplate}
+        colorValue={accentColor}
+        onColorChange={setAccentColor}
+      />
       <div className="preview-page__canvas">
-        <ResumePreviewShell resume={resume} template={template} />
+        <ResumePreviewShell resume={resume} template={template} accentColor={accentColor} />
       </div>
     </section>
   );

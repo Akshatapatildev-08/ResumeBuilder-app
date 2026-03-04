@@ -23,7 +23,16 @@
   color: #333333;
 }
 
-.preview-page__template-row {
+.preview-page__toast {
+  margin: 0 0 12px;
+  border: 1px solid #cfd8e6;
+  background: #f6f9ff;
+  color: #1f3a6d;
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.preview-page .template-picker {
   margin-bottom: 12px;
 }
 
@@ -35,8 +44,9 @@
 
 @media print {
   .preview-page__actions,
+  .preview-page__toast,
   .preview-page__warning,
-  .preview-page__template-row {
+  .preview-page .template-picker {
     display: none !important;
   }
 

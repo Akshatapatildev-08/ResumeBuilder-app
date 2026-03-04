@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import ContextHeader from '../components/ContextHeader.jsx';
 import ResumePreviewShell from '../components/ResumePreviewShell.jsx';
-import TemplateTabs from '../components/TemplateTabs.jsx';
+import TemplatePicker from '../components/TemplatePicker.jsx';
 import { computeAtsScore } from '../lib/atsScore.js';
 import { createSampleResume } from '../lib/resumeModel.js';
 import './BuilderPage.css';
@@ -140,7 +140,14 @@ function SkillCategory({ label, categoryKey, skills, inputValue, onInputChange, 
   );
 }
 
-export default function BuilderPage({ resume, setResume, template, setTemplate }) {
+export default function BuilderPage({
+  resume,
+  setResume,
+  template,
+  setTemplate,
+  accentColor,
+  setAccentColor,
+}) {
   const { score, suggestions } = computeAtsScore(resume);
   const improvements = topImprovements(resume);
   const [skillInputs, setSkillInputs] = useState({ technical: '', soft: '', tools: '' });
@@ -314,9 +321,6 @@ export default function BuilderPage({ resume, setResume, template, setTemplate }
         title="Resume Builder"
         subtitle="Auto-saved editing with deterministic ATS scoring v1."
       />
-      <div className="builder-page__template-row">
-        <TemplateTabs value={template} onChange={setTemplate} />
-      </div>
 
       <div className="builder-page__layout">
         <div className="builder-page__left">
@@ -533,7 +537,13 @@ export default function BuilderPage({ resume, setResume, template, setTemplate }
           </div>
 
           <h3>Live Preview</h3>
-          <ResumePreviewShell resume={resume} template={template} />
+          <TemplatePicker
+            template={template}
+            onTemplateChange={setTemplate}
+            colorValue={accentColor}
+            onColorChange={setAccentColor}
+          />
+          <ResumePreviewShell resume={resume} template={template} accentColor={accentColor} />
         </div>
       </div>
     </section>

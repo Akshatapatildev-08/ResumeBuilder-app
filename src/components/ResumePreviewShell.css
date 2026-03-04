@@ -1,4 +1,5 @@
 .resume-shell {
+  --accent-color: hsl(168, 60%, 40%);
   background: #ffffff;
   border: 1px solid #d5d5d5;
   padding: 26px;
@@ -8,26 +9,11 @@
   overflow: hidden;
 }
 
-.resume-shell--classic {
-  border-color: #d5d5d5;
-  padding: 26px;
-}
-
-.resume-shell--modern {
-  border-color: #bbbbbb;
-  padding: 30px;
-}
-
-.resume-shell--minimal {
-  border-color: #e3e3e3;
-  padding: 22px;
-}
-
 .resume-shell__header h2 {
   margin: 0;
-  font-family: ui-serif, Georgia, 'Times New Roman', serif;
   font-size: 28px;
   font-weight: 500;
+  color: var(--accent-color);
 }
 
 .resume-shell__header p {
@@ -37,21 +23,10 @@
 }
 
 .resume-shell__section {
-  border-top: 1px solid #ececec;
+  border-top: 1px solid color-mix(in srgb, var(--accent-color) 35%, #dadada);
   padding-top: 12px;
   break-inside: avoid;
   page-break-inside: avoid;
-}
-
-.resume-shell--modern .resume-shell__section {
-  border-top-color: #d6d6d6;
-}
-
-.resume-shell--minimal .resume-shell__section {
-  border-top: 0;
-  border-left: 2px solid #e4e4e4;
-  padding-top: 0;
-  padding-left: 10px;
 }
 
 .resume-shell__section h3 {
@@ -60,16 +35,7 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-weight: 600;
-}
-
-.resume-shell--modern .resume-shell__header h2 {
-  font-family: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
-  letter-spacing: 0.01em;
-}
-
-.resume-shell--minimal .resume-shell__header h2 {
-  font-size: 24px;
-  font-weight: 400;
+  color: var(--accent-color);
 }
 
 .resume-shell__section p {
@@ -103,7 +69,7 @@
 }
 
 .resume-shell__project-card {
-  border: 1px solid #e4e4e4;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 25%, #d8d8d8);
   background: #fbfbfb;
   padding: 10px;
   display: flex;
@@ -120,7 +86,7 @@
 }
 
 .resume-shell__pill {
-  border: 1px solid #d0d0d0;
+  border: 1px solid color-mix(in srgb, var(--accent-color) 35%, #c6c6c6);
   border-radius: 999px;
   font-size: 12px;
   padding: 3px 8px;
@@ -156,6 +122,102 @@
   font-size: 14px;
 }
 
+.resume-shell--classic .resume-shell__header h2 {
+  font-family: ui-serif, Georgia, 'Times New Roman', serif;
+}
+
+.resume-shell--classic .resume-shell__section {
+  border-top-style: solid;
+}
+
+.resume-shell--minimal {
+  border: 0;
+  padding: 32px;
+  gap: 26px;
+  font-family: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
+}
+
+.resume-shell--minimal .resume-shell__header h2 {
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.resume-shell--minimal .resume-shell__section {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.resume-shell--minimal .resume-shell__project-card {
+  border: 0;
+  background: #ffffff;
+  padding: 0;
+}
+
+.resume-shell--modern {
+  display: grid;
+  grid-template-columns: 33% 67%;
+  gap: 0;
+  padding: 0;
+}
+
+.resume-shell__sidebar {
+  background: color-mix(in srgb, var(--accent-color) 85%, #ffffff 15%);
+  color: #ffffff;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resume-shell__sidebar h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  font-family: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
+}
+
+.resume-shell__sidebar p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.resume-shell__side-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.resume-shell__side-section h3 {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.resume-shell--modern .resume-shell__pill {
+  border-color: #ffffff;
+  background: transparent;
+  color: #ffffff;
+}
+
+.resume-shell__main {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resume-shell--modern .resume-shell__section {
+  border-top-color: color-mix(in srgb, var(--accent-color) 30%, #d2d2d2);
+}
+
+@media (max-width: 900px) {
+  .resume-shell--modern {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media print {
   @page {
     margin: 14mm;
@@ -167,6 +229,11 @@
     color: #000000 !important;
     padding: 0 !important;
     gap: 12px;
+  }
+
+  .resume-shell__sidebar {
+    background: #ffffff !important;
+    color: #000000 !important;
   }
 
   .resume-shell__section,
