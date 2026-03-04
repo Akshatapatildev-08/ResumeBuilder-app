@@ -14,10 +14,22 @@ export default function ResumePreviewShell({ resume, template = 'classic' }) {
   const showSummary = hasText(summary);
   const educationItems = education.filter((entry) => hasText(entry.school) || hasText(entry.degree) || hasText(entry.details));
   const experienceItems = experience.filter((entry) => hasText(entry.company) || hasText(entry.role) || hasText(entry.details));
-  const projectItems = projects.filter((entry) => hasText(entry.name) || hasText(entry.details));
-  const showSkills = hasText(skills);
+  const projectItems = projects.filter(
+    (entry) => hasText(entry.title) || hasText(entry.description) || (Array.isArray(entry.techStack) && entry.techStack.length > 0) || hasText(entry.liveUrl) || hasText(entry.githubUrl),
+  );
+  const skillGroups = [
+    { label: 'Technical Skills', items: Array.isArray(skills?.technical) ? skills.technical.filter(hasText) : [] },
+    { label: 'Soft Skills', items: Array.isArray(skills?.soft) ? skills.soft.filter(hasText) : [] },
+    { label: 'Tools & Technologies', items: Array.isArray(skills?.tools) ? skills.tools.filter(hasText) : [] },
+  ].filter((group) => group.items.length > 0);
+  const showSkills = skillGroups.length > 0;
   const showLinks = hasText(links.github) || hasText(links.linkedin);
-  const showAnySection = showSummary || educationItems.length > 0 || experienceItems.length > 0 || projectItems.length > 0 || showSkills || showLinks;
+  const showAnySection = showSummary
+    || educationItems.length > 0
+    || experienceItems.length > 0
+    || projectItems.length > 0
+    || showSkills
+    || showLinks;
 
   return (
     <article className={`resume-shell resume-shell--${template}`}>
@@ -62,19 +74,51 @@ export default function ResumePreviewShell({ resume, template = 'classic' }) {
       {projectItems.length > 0 && (
         <section className="resume-shell__section">
           <h3>Projects</h3>
-          {projectItems.map((entry, index) => (
-            <div key={`proj-${index}`} className="resume-shell__item">
-              {hasText(entry.name) && <strong>{text(entry.name)}</strong>}
-              {hasText(entry.details) && <p>{text(entry.details)}</p>}
-            </div>
-          ))}
+          <div className="resume-shell__project-grid">
+            {projectItems.map((entry) => (
+              <article key={entry.id || `${entry.title}-${entry.description}`} className="resume-shell__project-card">
+                {hasText(entry.title) && <strong>{text(entry.title)}</strong>}
+                {hasText(entry.description) && <p>{text(entry.description)}</p>}
+                {Array.isArray(entry.techStack) && entry.techStack.length > 0 && (
+                  <div className="resume-shell__pills">
+                    {entry.techStack.filter(hasText).map((tech) => (
+                      <span key={`${entry.id}-${tech}`} className="resume-shell__pill">{tech}</span>
+                    ))}
+                  </div>
+                )}
+                {(hasText(entry.liveUrl) || hasText(entry.githubUrl)) && (
+                  <div className="resume-shell__project-links">
+                    {hasText(entry.liveUrl) && (
+                      <a href={entry.liveUrl} target="_blank" rel="noreferrer" className="resume-shell__link-icon" aria-label="Live URL">
+                        🔗
+                      </a>
+                    )}
+                    {hasText(entry.githubUrl) && (
+                      <a href={entry.githubUrl} target="_blank" rel="noreferrer" className="resume-shell__link-icon" aria-label="GitHub URL">
+                        💻
+                      </a>
+                    )}
+                  </div>
+                )}
+              </article>
+            ))}
+          </div>
         </section>
       )}
 
       {showSkills && (
         <section className="resume-shell__section">
           <h3>Skills</h3>
-          <p>{text(skills)}</p>
+          {skillGroups.map((group) => (
+            <div key={group.label} className="resume-shell__skill-group">
+              <p className="resume-shell__skill-label">{group.label}</p>
+              <div className="resume-shell__pills">
+                {group.items.map((item) => (
+                  <span key={`${group.label}-${item}`} className="resume-shell__pill">{item}</span>
+                ))}
+              </div>
+            </div>
+          ))}
         </section>
       )}
 

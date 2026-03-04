@@ -13,6 +13,16 @@ function countValidEntries(list, requiredFields) {
 }
 
 function parseSkills(skills) {
+  if (skills && typeof skills === 'object' && !Array.isArray(skills)) {
+    return [
+      ...(Array.isArray(skills.technical) ? skills.technical : []),
+      ...(Array.isArray(skills.soft) ? skills.soft : []),
+      ...(Array.isArray(skills.tools) ? skills.tools : []),
+    ]
+      .map((item) => String(item || '').trim())
+      .filter(Boolean);
+  }
+
   return String(skills || '')
     .split(',')
     .map((item) => item.trim())
@@ -24,14 +34,14 @@ function hasNumericImpact(resume) {
   const expHas = Array.isArray(resume.experience)
     && resume.experience.some((entry) => numberPattern.test(String(entry?.details || '')));
   const projHas = Array.isArray(resume.projects)
-    && resume.projects.some((entry) => numberPattern.test(String(entry?.details || '')));
+    && resume.projects.some((entry) => numberPattern.test(String(entry?.description || entry?.details || '')));
   return expHas || projHas;
 }
 
 export function computeAtsScore(resume) {
   const summaryWords = countWords(resume.summary);
   const summaryOk = summaryWords >= 40 && summaryWords <= 120;
-  const projectsCount = countValidEntries(resume.projects, ['name', 'details']);
+  const projectsCount = countValidEntries(resume.projects, ['title', 'description']);
   const projectsOk = projectsCount >= 2;
   const experienceCount = countValidEntries(resume.experience, ['company', 'role', 'details']);
   const experienceOk = experienceCount >= 1;

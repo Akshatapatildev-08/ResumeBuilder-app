@@ -1,5 +1,16 @@
 export const RESUME_STORAGE_KEY = 'resumeBuilderData';
 
+function createProjectId() {
+  return `project-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function parseLegacySkillsToTechnical(skills) {
+  return String(skills || '')
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 export function createEmptyResume() {
   return {
     personal: {
@@ -16,9 +27,13 @@ export function createEmptyResume() {
       { company: '', role: '', details: '' },
     ],
     projects: [
-      { name: '', details: '' },
+      { id: createProjectId(), title: '', description: '', techStack: [], liveUrl: '', githubUrl: '' },
     ],
-    skills: '',
+    skills: {
+      technical: [],
+      soft: [],
+      tools: [],
+    },
     links: {
       github: '',
       linkedin: '',
@@ -28,6 +43,13 @@ export function createEmptyResume() {
 
 function normalizeText(value) {
   return String(value || '');
+}
+
+function normalizeTags(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((item) => String(item || '').trim())
+    .filter(Boolean);
 }
 
 function normalizeList(raw, template) {
@@ -60,11 +82,23 @@ export function normalizeResume(raw) {
       role: normalizeText(entry.role),
       details: normalizeText(entry.details),
     })),
-    projects: normalizeList(raw.projects, { name: '', details: '' }).map((entry) => ({
-      name: normalizeText(entry.name),
-      details: normalizeText(entry.details),
-    })),
-    skills: normalizeText(raw.skills),
+    projects: normalizeList(raw.projects, { id: '', title: '', description: '', techStack: [], liveUrl: '', githubUrl: '' }).map((entry) => {
+      const legacyTitle = normalizeText(entry.title || entry.name);
+      const legacyDescription = normalizeText(entry.description || entry.details);
+      return {
+        id: normalizeText(entry.id) || createProjectId(),
+        title: legacyTitle,
+        description: legacyDescription,
+        techStack: normalizeTags(entry.techStack),
+        liveUrl: normalizeText(entry.liveUrl),
+        githubUrl: normalizeText(entry.githubUrl),
+      };
+    }),
+    skills: {
+      technical: normalizeTags(raw.skills?.technical || parseLegacySkillsToTechnical(raw.skills)),
+      soft: normalizeTags(raw.skills?.soft),
+      tools: normalizeTags(raw.skills?.tools),
+    },
     links: {
       github: normalizeText(raw.links?.github),
       linkedin: normalizeText(raw.links?.linkedin),
@@ -107,15 +141,27 @@ export function createSampleResume() {
     ],
     projects: [
       {
-        name: 'Placement Tracker',
-        details: 'A student job-tracking platform with role filters, progress boards, and reminders.',
+        id: createProjectId(),
+        title: 'Placement Tracker',
+        description: 'Built a student job-tracking platform with role filters, progress boards, and reminders.',
+        techStack: ['React', 'Node.js', 'PostgreSQL'],
+        liveUrl: 'https://placement-tracker.example.com',
+        githubUrl: 'https://github.com/aaravdev/placement-tracker',
       },
       {
-        name: 'Interview Prep Hub',
-        details: 'A structured practice app for coding rounds with milestone-based tracking.',
+        id: createProjectId(),
+        title: 'Interview Prep Hub',
+        description: 'Developed a structured practice app for coding rounds with milestone-based tracking.',
+        techStack: ['TypeScript', 'React', 'GraphQL'],
+        liveUrl: '',
+        githubUrl: 'https://github.com/aaravdev/interview-prep-hub',
       },
     ],
-    skills: 'React, JavaScript, HTML, CSS, Node.js, Git, REST APIs',
+    skills: {
+      technical: ['TypeScript', 'React', 'Node.js', 'PostgreSQL', 'GraphQL'],
+      soft: ['Team Leadership', 'Problem Solving'],
+      tools: ['Git', 'Docker', 'AWS'],
+    },
     links: {
       github: 'github.com/aaravdev',
       linkedin: 'linkedin.com/in/aaravsharma',

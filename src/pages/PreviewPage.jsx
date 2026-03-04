@@ -15,6 +15,13 @@ function toLines(value) {
     .filter(Boolean);
 }
 
+function allSkills(resume) {
+  const technical = Array.isArray(resume.skills?.technical) ? resume.skills.technical : [];
+  const soft = Array.isArray(resume.skills?.soft) ? resume.skills.soft : [];
+  const tools = Array.isArray(resume.skills?.tools) ? resume.skills.tools : [];
+  return [...technical, ...soft, ...tools].map((item) => String(item || '').trim()).filter(Boolean);
+}
+
 function buildPlainTextResume(resume) {
   const lines = [];
   const contact = [resume.personal.email, resume.personal.phone, resume.personal.location]
@@ -55,11 +62,16 @@ function buildPlainTextResume(resume) {
   lines.push('');
 
   lines.push('Projects');
-  if (resume.projects.some((entry) => hasText(entry.name) || hasText(entry.details))) {
+  if (resume.projects.some((entry) => hasText(entry.title) || hasText(entry.description))) {
     resume.projects.forEach((entry) => {
-      if (!hasText(entry.name) && !hasText(entry.details)) return;
-      lines.push(`- ${entry.name || 'Project'}`);
-      toLines(entry.details).forEach((item) => lines.push(`  ${item}`));
+      if (!hasText(entry.title) && !hasText(entry.description)) return;
+      lines.push(`- ${entry.title || 'Project'}`);
+      toLines(entry.description).forEach((item) => lines.push(`  ${item}`));
+      if (Array.isArray(entry.techStack) && entry.techStack.length > 0) {
+        lines.push(`  Tech Stack: ${entry.techStack.join(', ')}`);
+      }
+      if (hasText(entry.liveUrl)) lines.push(`  Live: ${entry.liveUrl}`);
+      if (hasText(entry.githubUrl)) lines.push(`  GitHub: ${entry.githubUrl}`);
     });
   } else {
     lines.push('N/A');
@@ -67,7 +79,7 @@ function buildPlainTextResume(resume) {
   lines.push('');
 
   lines.push('Skills');
-  lines.push(resume.skills.trim() || 'N/A');
+  lines.push(allSkills(resume).join(', ') || 'N/A');
   lines.push('');
 
   lines.push('Links');
@@ -79,7 +91,7 @@ function buildPlainTextResume(resume) {
 
 function isResumePotentiallyIncomplete(resume) {
   const hasName = hasText(resume.personal.name);
-  const hasProject = resume.projects.some((entry) => hasText(entry.name) || hasText(entry.details));
+  const hasProject = resume.projects.some((entry) => hasText(entry.title) || hasText(entry.description));
   const hasExperience = resume.experience.some((entry) => hasText(entry.company) || hasText(entry.role) || hasText(entry.details));
   return !hasName || (!hasProject && !hasExperience);
 }

@@ -97,6 +97,58 @@
   color: #444444;
 }
 
+.resume-shell__project-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.resume-shell__project-card {
+  border: 1px solid #e4e4e4;
+  background: #fbfbfb;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.resume-shell__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.resume-shell__pill {
+  border: 1px solid #d0d0d0;
+  border-radius: 999px;
+  font-size: 12px;
+  padding: 3px 8px;
+  background: #ffffff;
+}
+
+.resume-shell__skill-group {
+  margin-top: 8px;
+}
+
+.resume-shell__skill-label {
+  margin: 0 0 6px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.resume-shell__project-links {
+  display: flex;
+  gap: 10px;
+}
+
+.resume-shell__link-icon {
+  color: #111111;
+  text-decoration: none;
+  font-size: 14px;
+}
+
 .resume-shell__empty {
   border-top: 1px solid #ececec;
   padding-top: 12px;
@@ -118,7 +170,8 @@
   }
 
   .resume-shell__section,
-  .resume-shell__item {
+  .resume-shell__item,
+  .resume-shell__project-card {
     break-inside: avoid;
     page-break-inside: avoid;
   }
